@@ -1,0 +1,32 @@
+# Java compiled files
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# macOS system files
+.DS_Store
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# IDE - VS Code
+.vscode/
+
+# IDE - Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+bin/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.bak

@@ -1,0 +1,287 @@
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 22
+Server version: 8.0.42 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE reservation_system;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> USE reservation_system;
+Database changed
+mysql> CREATE TABLE users (
+    ->     user_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     name VARCHAR(100) NOT NULL,
+    ->     email VARCHAR(100) UNIQUE NOT NULL
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TABLE trains (
+    ->     train_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     train_name VARCHAR(100) NOT NULL,
+    ->     source VARCHAR(50),
+    ->     destination VARCHAR(50),
+    ->     total_seats INT CHECK (total_seats > 0)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE seats (
+    ->     seat_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     train_id INT,
+    ->     seat_number INT,
+    ->     is_booked BOOLEAN DEFAULT FALSE,
+    ->     FOREIGN KEY (train_id) REFERENCES trains(train_id),
+    ->     UNIQUE(train_id, seat_number)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE reservations (
+    ->     reservation_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     user_id INT,
+    ->     train_id INT,
+    ->     seat_id INT,
+    ->     booking_date DATE,
+    ->     FOREIGN KEY (user_id) REFERENCES users(user_id),
+    ->     FOREIGN KEY (train_id) REFERENCES trains(train_id),
+    ->     FOREIGN KEY (seat_id) REFERENCES seats(seat_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO users (name, email) VALUES ('Ravi Kumar', 'ravi@example.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO trains (train_name, source, destination, total_seats) VALUES ('Express 101', 'Delhi', 'Mumbai', 3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql>
+mysql> -- Add 3 seats to the train
+mysql> INSERT INTO seats (train_id, seat_number) VALUES (1, 1), (1, 2), (1, 3);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE users ADD password VARCHAR(100) NOT NULL DEFAULT '1234';
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> -- Insert multiple trains into the trains table
+mysql> INSERT INTO trains (train_name) VALUES ('KLBG Vande Bharat Express');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO trains (train_name) VALUES ('Udyan Express');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO trains (train_name) VALUES ('Karnataka Express');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO trains (train_name) VALUES ('Basava Express');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO trains (train_name) VALUES ('Has Sur Express');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO trains (train_name) VALUES ('Vivek Express');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO trains (train_name) VALUES ('Smvb Klbg Spl');
+Query OK, 1 row affected (0.00 sec)
+
+mysql>
+mysql> -- Insert 5 seats for each train (assuming seat_number starts from 1 for each train)
+mysql> INSERT INTO seats (train_id, seat_number, is_booked) VALUES
+    -> (1, 1, FALSE), (1, 2, FALSE), (1, 3, FALSE), (1, 4, FALSE), (1, 5, FALSE),
+    -> (2, 1, FALSE), (2, 2, FALSE), (2, 3, FALSE), (2, 4, FALSE), (2, 5, FALSE),
+    -> (3, 1, FALSE), (3, 2, FALSE), (3, 3, FALSE), (3, 4, FALSE), (3, 5, FALSE),
+    -> (4, 1, FALSE), (4, 2, FALSE), (4, 3, FALSE), (4, 4, FALSE), (4, 5, FALSE),
+    -> (5, 1, FALSE), (5, 2, FALSE), (5, 3, FALSE), (5, 4, FALSE), (5, 5, FALSE),
+    -> (6, 1, FALSE), (6, 2, FALSE), (6, 3, FALSE), (6, 4, FALSE), (6, 5, FALSE),
+    -> (7, 1, FALSE), (7, 2, FALSE), (7, 3, FALSE), (7, 4, FALSE), (7, 5, FALSE);
+ERROR 1062 (23000): Duplicate entry '1-1' for key 'seats.train_id'
+mysql> -- Insert 5 seats for each train (assuming seat_number starts from 1 for each train)
+mysql> INSERT INTO seats (train_id, seat_number, is_booked) VALUES
+    -> (2, 1, FALSE), (2, 2, FALSE), (2, 3, FALSE), (2, 4, FALSE), (2, 5, FALSE),
+    -> (3, 1, FALSE), (3, 2, FALSE), (3, 3, FALSE), (3, 4, FALSE), (3, 5, FALSE),
+    -> (4, 1, FALSE), (4, 2, FALSE), (4, 3, FALSE), (4, 4, FALSE), (4, 5, FALSE),
+    -> (5, 1, FALSE), (5, 2, FALSE), (5, 3, FALSE), (5, 4, FALSE), (5, 5, FALSE),
+    -> (6, 1, FALSE), (6, 2, FALSE), (6, 3, FALSE), (6, 4, FALSE), (6, 5, FALSE),
+    -> (7, 1, FALSE), (7, 2, FALSE), (7, 3, FALSE), (7, 4, FALSE), (7, 5, FALSE);
+Query OK, 30 rows affected (0.01 sec)
+Records: 30  Duplicates: 0  Warnings: 0
+
+mysql> desc users;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| user_id  | int          | NO   | PRI | NULL    | auto_increment |
+| name     | varchar(100) | NO   |     | NULL    |                |
+| email    | varchar(100) | NO   | UNI | NULL    |                |
+| password | varchar(100) | NO   |     | 1234    |                |
++----------+--------------+------+-----+---------+----------------+
+4 rows in set (0.02 sec)
+
+mysql> desc trains;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| train_id    | int          | NO   | PRI | NULL    | auto_increment |
+| train_name  | varchar(100) | NO   |     | NULL    |                |
+| source      | varchar(50)  | YES  |     | NULL    |                |
+| destination | varchar(50)  | YES  |     | NULL    |                |
+| total_seats | int          | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> select * from trains;
++----------+---------------------------+--------+-------------+-------------+
+| train_id | train_name                | source | destination | total_seats |
++----------+---------------------------+--------+-------------+-------------+
+|        1 | Express 101               | Delhi  | Mumbai      |           3 |
+|        2 | KLBG Vande Bharat Express | NULL   | NULL        |        NULL |
+|        3 | Udyan Express             | NULL   | NULL        |        NULL |
+|        4 | Karnataka Express         | NULL   | NULL        |        NULL |
+|        5 | Basava Express            | NULL   | NULL        |        NULL |
+|        6 | Has Sur Express           | NULL   | NULL        |        NULL |
+|        7 | Vivek Express             | NULL   | NULL        |        NULL |
+|        8 | Smvb Klbg Spl             | NULL   | NULL        |        NULL |
++----------+---------------------------+--------+-------------+-------------+
+8 rows in set (0.01 sec)
+
+mysql> DELETE FROM trains WHERE train_name = 'Express 101';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (reservation_system.reservations, CONSTRAINT reservations_ibfk_2 FOREIGN KEY (train_id) REFERENCES trains (train_id))
+mysql> UPDATE trains
+    -> SET source = 'BLR', destination = 'KLBG'
+    -> WHERE source IS NULL AND destination IS NULL;
+Query OK, 7 rows affected (0.01 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+
+mysql> select * from trains;
++----------+---------------------------+--------+-------------+-------------+
+| train_id | train_name                | source | destination | total_seats |
++----------+---------------------------+--------+-------------+-------------+
+|        1 | Express 101               | Delhi  | Mumbai      |           3 |
+|        2 | KLBG Vande Bharat Express | BLR    | KLBG        |        NULL |
+|        3 | Udyan Express             | BLR    | KLBG        |        NULL |
+|        4 | Karnataka Express         | BLR    | KLBG        |        NULL |
+|        5 | Basava Express            | BLR    | KLBG        |        NULL |
+|        6 | Has Sur Express           | BLR    | KLBG        |        NULL |
+|        7 | Vivek Express             | BLR    | KLBG        |        NULL |
+|        8 | Smvb Klbg Spl             | BLR    | KLBG        |        NULL |
++----------+---------------------------+--------+-------------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> UPDATE trains
+    -> SET total_seats = 5
+    -> WHERE total_seats IS NULL;
+Query OK, 7 rows affected (0.00 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+
+mysql> select * from trains;
++----------+---------------------------+--------+-------------+-------------+
+| train_id | train_name                | source | destination | total_seats |
++----------+---------------------------+--------+-------------+-------------+
+|        1 | Express 101               | Delhi  | Mumbai      |           3 |
+|        2 | KLBG Vande Bharat Express | BLR    | KLBG        |           5 |
+|        3 | Udyan Express             | BLR    | KLBG        |           5 |
+|        4 | Karnataka Express         | BLR    | KLBG        |           5 |
+|        5 | Basava Express            | BLR    | KLBG        |           5 |
+|        6 | Has Sur Express           | BLR    | KLBG        |           5 |
+|        7 | Vivek Express             | BLR    | KLBG        |           5 |
+|        8 | Smvb Klbg Spl             | BLR    | KLBG        |           5 |
++----------+---------------------------+--------+-------------+-------------+
+8 rows in set (0.00 sec)
+
+
+
+
+DONE TILL HERE
+
+mysql> select * from users;
++---------+------------+--------------------+----------+
+| user_id | name       | email              | password |
++---------+------------+--------------------+----------+
+|       1 | Ravi Kumar | ravi@example.com   | 1234     |
+|       2 | Aryan      | aryan123@gmail.com | arya123  |
+|       3 | Rahul      | rahul123@gmail.com | rahul123 |
+|       4 | Aditya     | Adi123@gmail.com   | adi123   |
+|       5 | Sami       | sami@gmail.com     | sami123  |
+|       6 | Vikas      | vikas123@gmail.com | vikas123 |
++---------+------------+--------------------+----------+
+6 rows in set (0.01 sec)
+
+mysql> select * from reservations;
++----------------+---------+----------+---------+--------------+
+| reservation_id | user_id | train_id | seat_id | booking_date |
++----------------+---------+----------+---------+--------------+
+|              6 |       1 |        1 |       1 | 2025-05-10   |
+|              7 |       1 |        2 |      43 | 2025-05-10   |
+|              8 |       2 |        2 |      40 | 2025-05-11   |
+|             14 |       3 |        6 |      61 | 2025-05-11   |
+|             16 |       3 |        2 |      39 | 2025-05-11   |
+|             17 |       2 |        5 |      55 | 2025-05-11   |
+|             18 |       2 |        6 |      60 | 2025-05-11   |
+|             20 |       6 |        2 |      41 | 2025-05-11   |
++----------------+---------+----------+---------+--------------+
+8 rows in set (0.01 sec)
+
+mysql> select * from trains;
++----------+---------------------------+--------+-------------+-------------+
+| train_id | train_name                | source | destination | total_seats |
++----------+---------------------------+--------+-------------+-------------+
+|        1 | Express 101               | Delhi  | Mumbai      |           3 |
+|        2 | KLBG Vande Bharat Express | BLR    | KLBG        |           5 |
+|        3 | Udyan Express             | BLR    | KLBG        |           5 |
+|        4 | Karnataka Express         | BLR    | KLBG        |           5 |
+|        5 | Basava Express            | BLR    | KLBG        |           5 |
+|        6 | Has Sur Express           | BLR    | KLBG        |           5 |
+|        7 | Vivek Express             | BLR    | KLBG        |           5 |
+|        8 | Smvb Klbg Spl             | BLR    | KLBG        |           5 |
++----------+---------------------------+--------+-------------+-------------+
+8 rows in set (0.01 sec)
+
+mysql> select * from seats;
++---------+----------+-------------+-----------+
+| seat_id | train_id | seat_number | is_booked |
++---------+----------+-------------+-----------+
+|       1 |        1 |           1 |         1 |
+|       2 |        1 |           2 |         0 |
+|       3 |        1 |           3 |         0 |
+|      39 |        2 |           1 |         1 |
+|      40 |        2 |           2 |         1 |
+|      41 |        2 |           3 |         1 |
+|      42 |        2 |           4 |         0 |
+|      43 |        2 |           5 |         1 |
+|      44 |        3 |           1 |         0 |
+|      45 |        3 |           2 |         0 |
+|      46 |        3 |           3 |         0 |
+|      47 |        3 |           4 |         0 |
+|      48 |        3 |           5 |         0 |
+|      49 |        4 |           1 |         0 |
+|      50 |        4 |           2 |         0 |
+|      51 |        4 |           3 |         0 |
+|      52 |        4 |           4 |         0 |
+|      53 |        4 |           5 |         0 |
+|      54 |        5 |           1 |         0 |
+|      55 |        5 |           2 |         1 |
+|      56 |        5 |           3 |         0 |
+|      57 |        5 |           4 |         0 |
+|      58 |        5 |           5 |         0 |
+|      59 |        6 |           1 |         0 |
+|      60 |        6 |           2 |         1 |
+|      61 |        6 |           3 |         1 |
+|      62 |        6 |           4 |         0 |
+|      63 |        6 |           5 |         0 |
+|      64 |        7 |           1 |         0 |
+|      65 |        7 |           2 |         0 |
+|      66 |        7 |           3 |         0 |
+|      67 |        7 |           4 |         0 |
+|      68 |        7 |           5 |         0 |
++---------+----------+-------------+-----------+
+33 rows in set (0.00 sec)
+
+mysql>
