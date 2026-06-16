@@ -36,16 +36,15 @@ You can compile and run the application from your terminal.
 Run the following command to compile all Java files. This command includes the MySQL connector in the classpath.
 
 ```bash
-javac -cp ".:lib/mysql-connector-j-9.3.0.jar" *.java
+javac -cp ".;lib/mysql-connector-j-9.7.0.jar" *.java
 ```
 
 ### Step 2: Start the Application
 Once compiled, run the `Main` class:
 
 ```bash
-java -cp ".:lib/mysql-connector-j-9.3.0.jar" Main
-```
 
+java -cp ".;lib\mysql-connector-j-9.7.0.jar" Main
 ## 4. Using the Application
 
 1.  **Login**: Once the application starts, you'll see a Login screen. You can use one of the seeded users from the database (e.g., Email: `ravi@example.com`, Password: `1234`).

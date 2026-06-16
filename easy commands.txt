@@ -1,0 +1,10 @@
+docker start mysql-reservation
+
+java -cp ".;lib\*" Main
+
+just for usefulness
+docker ps          # Running containers
+docker ps -a       # All containers
+docker stop mysql-reservation
+docker start mysql-reservation
+docker rm mysql-reservation   # Deletes container
