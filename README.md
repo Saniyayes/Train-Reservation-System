@@ -1,5 +1,11 @@
 # 🚂 Train Reservation System
+# Train Reservation System
 
+Developed as a collaborative project.
+
+Contributors:
+- Saniya Patil
+- Rishit
 A modern, desktop-based **Train Reservation System** built with **Java Swing** and **MySQL**. This application provides a comprehensive solution for managing train bookings, user authentication, and real-time seat availability.
 
 ---
